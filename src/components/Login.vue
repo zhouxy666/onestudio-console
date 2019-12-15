@@ -34,6 +34,7 @@
 </template>
 
 <script>
+  import loginService from '@/services/login/loginService'
   export default{
     name: 'login',
     data: function () {
@@ -67,7 +68,7 @@
       onSubmit(){
         this.$refs['loginForm'].validate((valid, event) => {
           if (valid) {
-            alert('submit!')
+            loginService.login()
           } else {
             return false
           }
