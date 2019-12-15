@@ -106,7 +106,7 @@
         }
       }
       .login-body {
-        padding: 25px 10px;
+        padding: 25px 10px 0;
       }
       .login-submit {
         margin-top: 20px;
