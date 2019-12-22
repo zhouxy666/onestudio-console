@@ -1,13 +1,13 @@
 <template>
   <Framework>
-    <el-row class="onestudio-content">
-      <el-col :span="3" class="left-menu">
+    <div class="onestudio-content">
+      <div class="left-menu">
         <LeftMenu></LeftMenu>
-      </el-col>
-      <el-col :span="21" class="right-content">
+      </div>
+      <div class="right-content">
         <router-view/>
-      </el-col>
-    </el-row>
+      </div>
+    </div>
   </Framework>
 </template>
 
@@ -24,29 +24,42 @@
     },
     mounted(){
       busService.$on('menu-item', data => {
-        if (data.index === '2-1') {
-          console.log(data)
-          this.$router.push({name: 'user'})
+        const mapRouter = {
+          '1': 'overview',
+          '2-1': 'user',
+          '2-2': 'grade',
+          '2-3': 'course',
+          '2-4': 'class'
         }
-        if (data.index === '2-2') {
-          console.log(data)
-          this.$router.push({name: 'grade'})
-        }
+        this.$router.push({name: mapRouter[data.index]})
       })
-    }
+    },
+    methods: {}
   }
 </script>
 
 <style lang="less">
   .onestudio-content {
     height: 100%;
+    min-width: 1280px;
     .left-menu {
+      float: left;
       height: 100%;
+      width: 240px;
       background: #fff;
     }
     .right-content {
+      float: left;
+      padding: 10px;
+      width: calc(100% - 260px);
       height: 100%;
-      background: #fde2e2;
+    }
+    &:after {
+      clear: both;
+      content: '';
+      height: 0;
+      display: block;
+      visibility: hidden;
     }
   }
 

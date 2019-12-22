@@ -5,7 +5,7 @@ import CommonService from '@/services/commonService'
 
 class LoginService extends CommonService {
   login () {
-    this.axios('/v1/user/get', function (data) {
+    this.axios('/v1/userManage/get', function (data) {
       console.log(data)
     })
   }
