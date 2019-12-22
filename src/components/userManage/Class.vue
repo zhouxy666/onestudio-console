@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>这是用户管理页面</h1>
+    <h2>这里是考勤页面</h2>
   </div>
 </template>
 

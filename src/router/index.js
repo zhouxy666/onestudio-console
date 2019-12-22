@@ -2,8 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/login'
 import Index from '@/components/Index'
-import User from '@/components/user/User'
-import Grade from '@/components/user/Grade'
+import User from '@/components/userManage/user/UserPage'
+import Grade from '@/components/userManage/Grade'
+import Course from '@/components/userManage/Course'
+import Class from '@/components/userManage/Class'
+import Overview from '@/components/overview/Overview'
 
 const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
@@ -25,6 +28,11 @@ export default new Router({
       component: Index,
       children: [
         {
+          path: '/overview',
+          name: 'overview',
+          component: Overview
+        },
+        {
           path: '/user',
           name: 'user',
           component: User
@@ -33,6 +41,16 @@ export default new Router({
           path: '/grade',
           name: 'grade',
           component: Grade
+        },
+        {
+          path: '/course',
+          name: 'course',
+          component: Course
+        },
+        {
+          path: '/class',
+          name: 'class',
+          component: Class
         }
       ]
     }
