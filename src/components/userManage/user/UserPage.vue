@@ -96,10 +96,10 @@
     },
     methods: {
       showAddDialog(){
-        this.isShowAddUserDialog = true;
+        this.isShowAddUserDialog = true
       },
       closeAddDialog(){
-        this.isShowAddUserDialog = false;
+        this.isShowAddUserDialog = false
       }
     }
   }
