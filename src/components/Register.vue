@@ -8,23 +8,30 @@
       </el-row>
       <el-row class="login-body">
         <el-col :span="24">
-          <el-form ref="loginForm" :model="form" :rules="rules">
-            <el-form-item prop="username">
-              <el-input v-model="form.username">
+          <el-form ref="registerForm" :model="form" :rules="rules">
+            <el-form-item prop="account">
+              <el-input v-model="form.account">
                 <template slot="prepend">
                   <span class="el-icon-user-solid"></span>
                 </template>
               </el-input>
             </el-form-item>
-            <el-form-item prop="password">
-              <el-input v-model="form.password" show-password>
+            <el-form-item prop="secret">
+              <el-input v-model="form.secret" show-password>
+                <template slot="prepend">
+                  <span class="el-icon-lock"></span>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="repeatSecret">
+              <el-input v-model="form.repeatSecret" show-password>
                 <template slot="prepend">
                   <span class="el-icon-lock"></span>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit" class="login-submit">登录</el-button>
+              <el-button type="primary" @click="onSubmit" class="login-submit">注册</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -41,14 +48,29 @@
     data: function () {
       return {
         form: {
-          username: '',
-          password: ''
+          account: '',
+          secret: '',
+          repeatSecret: ''
         },
         rules: {
-          username: [
+          account: [
             {required: true, message: '请输入用户名', trigger: 'blur'}
           ],
-          password: [
+          secret: [
+            {required: true, message: '请输入密码', trigger: 'blur'},
+            {
+              required: true,
+              message: '必须以字母数字下划线开头，长度为6到15个字符，必须包含特殊字符_!%@&*#',
+              validator: function (rule, password, callback) {
+                const regPwd = /[a-z0-9_][a-z0-9_!%@&*#]{6,15}/
+                if (regPwd.test(password)) {
+                  callback()
+                }
+                callback(rule)
+              }
+            }
+          ],
+          repeatSecret: [
             {required: true, message: '请输入密码', trigger: 'blur'},
             {
               required: true,
@@ -67,9 +89,19 @@
     },
     methods: {
       onSubmit() {
-        this.$refs['loginForm'].validate((valid, event) => {
+        this.$refs['registerForm'].validate((valid, event) => {
           if (valid) {
-            loginService.login()
+            const params = Object.assign({}, this.form, {
+              type: 100
+            })
+            loginService.register(params).then(data => {
+              this.$notify({
+                title: '成功',
+                message: '注册成功，请登录',
+                type: 'success'
+              })
+              this.$router.push({name: 'login'})
+            })
           } else {
             return false
           }

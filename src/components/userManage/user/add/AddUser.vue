@@ -75,7 +75,7 @@
 </template>
 
 <script>
-  export default{
+  export default {
     name: 'AddUser',
     data: () => {
       return {
@@ -129,19 +129,19 @@
       isShow: false
     },
     computed: {
-      isShowDialog(){
+      isShowDialog() {
         return this.isShow
       }
     },
     methods: {
-      close(event){
+      close(event) {
         this.$emit('closeDialog')
       },
-      submit(){
+      submit() {
         this.$refs['userForm'].validate((valid, event) => {
           if (valid) {
             // 发送请求
-            this.close();
+            this.close()
           }
         })
       }
@@ -154,11 +154,13 @@
     .title-icon {
       color: #409eff;
       font-size: 20px;
+
       .title-font {
         padding-left: 10px;
         color: #333;
       }
     }
+
     .el-form-item {
       width: 600px;
     }
