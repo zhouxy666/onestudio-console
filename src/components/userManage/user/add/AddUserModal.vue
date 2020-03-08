@@ -51,7 +51,8 @@
 </template>
 
 <script>
-  import UserService from '@/services/userService';
+  import UserService from '@/services/userService'
+  import busService from '@/services/busService'
 
   export default {
     name: 'AddUser',
@@ -119,11 +120,10 @@
             // 发送请求
             const gender = this.getGender(this.form.gender)
             const params = {...this.form, gender}
-            console.log(params)
             this.userService.createMember(params).then(data => {
-              console.log(data)
               this.$message('会员创建成功')
               this.close()
+              busService.$emit('addUserSucess')
             }).catch(response => {
               console.log(response)
             })

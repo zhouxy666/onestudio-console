@@ -2,7 +2,7 @@
  * Created by fedrtg on 2019/12/15.
  */
 import axios from 'axios'
-import $cookie from "vue-cookies";
+import $cookie from 'vue-cookies'
 
 class Fetch {
   constructor(vue) {
