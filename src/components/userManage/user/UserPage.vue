@@ -69,7 +69,9 @@
 </template>
 
 <script>
-  import AddUser from '@/components/userManage/user/add/AddUser'
+  import AddUser from '@/components/userManage/user/add/AddUserModal'
+  import UserService from '@/services/userService'
+
   export default {
     name: 'userPage',
     components: {
@@ -94,11 +96,21 @@
         isShowAddUserDialog: false
       }
     },
+    created() {
+      this.userService = new UserService(this)
+    },
+    mounted() {
+      this.userService.getMembers().then(data => {
+        console.log(data)
+      }).catch(response => {
+        console.log(response)
+      })
+    },
     methods: {
-      showAddDialog(){
+      showAddDialog() {
         this.isShowAddUserDialog = true
       },
-      closeAddDialog(){
+      closeAddDialog() {
         this.isShowAddUserDialog = false
       }
     }

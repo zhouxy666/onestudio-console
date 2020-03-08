@@ -19,51 +19,27 @@
                  :label-position="labelPosition"
                  :status-icon="true"
                  :label-width="'80px'">
+          <el-form-item prop="openid" label="openid">
+            <el-input v-model="form.openid"></el-input>
+          </el-form-item>
           <el-form-item prop="name" label="姓名">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
-
           <el-form-item prop="age" label="年龄">
             <el-input v-model="form.age"></el-input>
           </el-form-item>
-
           <el-form-item prop="gender" label="性别">
             <el-select v-model="form.gender" placeholder="请选择">
               <el-option label="男" value="male"></el-option>
               <el-option label="女" value="female"></el-option>
             </el-select>
           </el-form-item>
-
-          <el-form-item prop="vipLevel" label="会员等级">
-            <el-select v-model="form.vipLevel" placeholder="请选择">
-              <el-option label="普通会员" value="2"></el-option>
-              <el-option label="管理员" value="1"></el-option>
-            </el-select>
+          <el-form-item prop="mobile" label="电话">
+            <el-input v-model="form.mobile"></el-input>
           </el-form-item>
-          <el-form-item prop="phone" label="电话">
-            <el-input v-model="form.phone"></el-input>
-          </el-form-item>
-
           <el-form-item prop="nickName" label="小名">
             <el-input v-model="form.nickname"></el-input>
           </el-form-item>
-
-          <el-form-item prop="birthday" label="生日">
-            <el-date-picker
-              v-model="form.birthday"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-
-          <el-form-item prop="email" label="邮件">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-
-          <el-form-item prop="address" label="家庭住址">
-            <el-input v-model="form.address"></el-input>
-          </el-form-item>
-
         </el-form>
       </div>
       <div slot="footer" class="footer">
@@ -75,24 +51,26 @@
 </template>
 
 <script>
+  import UserService from '@/services/userService';
+
   export default {
     name: 'AddUser',
     data: () => {
       return {
         labelPosition: 'right',
         form: {
-          name: '刘思杰',
-          email: '',
-          nickname: '',
+          openid: '',
+          name: '',
           gender: '',
           age: '',
-          leftLessons: '',
-          vipLevel: '2',
-          birthday: '',
-          phone: '',
-          address: ''
+          avatarurl: '',
+          mobile: '',
+          nickname: ''
         },
         rules: {
+          openid: [
+            {required: true, message: '请输入openid', trigger: 'blur'}
+          ],
           name: [
             {required: true, message: '请输入姓名', trigger: 'blur'}
           ],
@@ -113,15 +91,9 @@
               }
             }
           ],
-          vipLevel: [
-            {required: true, message: '请输入会员等级', trigger: 'change'}
-          ],
-          phone: [],
-          email: [],
-          nickname: [],
-          leftLessons: [],
-          birthday: [],
-          address: []
+          avatarurl: [],
+          mobile: [],
+          nickname: []
         }
       }
     },
@@ -133,6 +105,9 @@
         return this.isShow
       }
     },
+    created() {
+      this.userService = new UserService(this)
+    },
     methods: {
       close(event) {
         this.$emit('closeDialog')
@@ -140,10 +115,27 @@
       submit() {
         this.$refs['userForm'].validate((valid, event) => {
           if (valid) {
+            console.log('form', this.form)
             // 发送请求
-            this.close()
+            const gender = this.getGender(this.form.gender)
+            const params = {...this.form, gender}
+            console.log(params)
+            this.userService.createMember(params).then(data => {
+              console.log(data)
+              this.$message('会员创建成功')
+              this.close()
+            }).catch(response => {
+              console.log(response)
+            })
           }
         })
+      },
+      getGender(gender) {
+        const mapGender = {
+          'male': 1,
+          'female': 2
+        }
+        return mapGender[gender]
       }
     }
   }

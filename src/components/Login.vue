@@ -69,7 +69,14 @@
       onSubmit() {
         this.$refs['loginForm'].validate((valid, event) => {
           if (valid) {
-            loginService.login()
+            loginService.login().then(token => {
+              // 登录成功，使用cookie存一下token
+              this.$cookies.set('token', token)
+              // 跳转到首页
+              this.$router.push({name: 'overview'})
+            }, response => {
+              this.$cookies.remove('token')
+            })
           } else {
             return false
           }
