@@ -16,7 +16,9 @@
         </div>
         <div class="table-content">
           <el-table
-            :data="tableData"
+            :max-height="tableData.maxHeight"
+            :highlight-current-row="tableData.highlightCurrentRow"
+            :data="tableData.data"
             border>
             <el-table-column
               prop="name"
@@ -43,6 +45,17 @@
               label="手机">
             </el-table-column>
           </el-table>
+          <div class="pagination">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="pagination.currentPage"
+              :page-sizes="pagination.pageSizes"
+              :page-size="pagination.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pagination.total">
+            </el-pagination>
+          </div>
         </div>
         <add-user :isShow="isShowAddUserDialog" @closeDialog="closeAddDialog"></add-user>
       </el-col>
@@ -62,13 +75,23 @@
     },
     data() {
       return {
-        tableData: [],
+        pagination: {
+          total: 0,
+          currentPage: 1,
+          pageSizes: [5, 10, 20, 50],
+          pageSize: 5
+        },
+        tableData: {
+          maxHeight: '420px',
+          highlightCurrentRow: false,
+          data: []
+        },
         isShowAddUserDialog: false
       }
     },
     created() {
       this.userService = new UserService(this)
-      busService.$on('addUserSucess', () => {
+      busService.$on('addUserSuccess', () => {
         this.getUser()
       })
     },
@@ -77,9 +100,15 @@
     },
     methods: {
       getUser() {
-        this.userService.getMembers().then(data => {
-          console.log(data)
-          this.tableData = data.data
+        const params = {
+          size: this.pagination.pageSize,
+          page: this.pagination.currentPage
+        }
+        this.userService.getMembers(params).then(data => {
+          const membersData = data.data
+          this.tableData.data = membersData.members
+          // 分页
+          this.pagination.total = membersData.count
         }).catch(response => {
           console.log(response)
         })
@@ -89,6 +118,14 @@
       },
       closeAddDialog() {
         this.isShowAddUserDialog = false
+      },
+      handleSizeChange(pageSize) {
+        this.pagination.pageSize = pageSize
+        this.getUser()
+      },
+      handleCurrentChange(currentPage) {
+        this.pagination.currentPage = currentPage
+        this.getUser()
       }
     }
   }
@@ -102,8 +139,9 @@
     }
 
     .table-content {
-      max-height: 500px;
-      overflow-y: scroll;
+      .pagination {
+        padding-top: 20px;
+      }
     }
   }
 </style>
