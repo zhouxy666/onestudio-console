@@ -123,7 +123,7 @@
             this.userService.createMember(params).then(data => {
               this.$message('会员创建成功')
               this.close()
-              busService.$emit('addUserSucess')
+              busService.$emit('addUserSuccess')
             }).catch(response => {
               console.log(response)
             })

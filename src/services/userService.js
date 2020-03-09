@@ -9,8 +9,8 @@ class UserService extends CommonService {
     super(vue)
   }
 
-  getMembers() {
-    return this.fetch.get('/v1/members')
+  getMembers(params) {
+    return this.fetch.get('/v1/members', params)
   }
 
   createMember(params) {
