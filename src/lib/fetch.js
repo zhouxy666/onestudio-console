@@ -13,37 +13,36 @@ class Fetch {
     }
   }
 
-  get(url, params) {
+  get (url, params) {
     const config = this._generateConfig('get', url, params)
     // 发送请求
     return this._request(config)
   };
 
-  post(url, params) {
+  post (url, params) {
     const config = this._generateConfig('post', url, params)
     // 发送请求
     return this._request(config)
   };
 
-  put(url, params) {
+  put (url, params) {
     const config = this._generateConfig('put', url, params)
     // 发送请求
     return this._request(config)
   };
 
-  delete(url, params) {
+  delete (url, params) {
     const config = this._generateConfig('delete', url, params)
     // 发送请求
     return this._request(config)
   }
 
   // 生成配置文件_generateConfig
-  _generateConfig(method, url, params, headers) {
+  _generateConfig (method, url, params, headers) {
     let config = {
       method,
       url,
       headers: this.headers,
-      auth: this.auth,
       ...headers
     }
     if (method.toLowerCase() === 'get') {
@@ -56,13 +55,11 @@ class Fetch {
         data: params
       })
     }
-
-    console.log('request config', config)
     return config
   }
 
   // 发送请求
-  _request(config) {
+  _request (config) {
     // 配置axios
     return axios.request(config)
       .then(axiosResponse => {
@@ -75,18 +72,21 @@ class Fetch {
           throw new Error('something error')
         }
         if (error.response.status === 401) {
-          // 没有权限
+          // 鉴权问题
           const errorData = error.response.data
-          // console.log(errorData.msg)
-          this.vue.$message(`${errorData.msg},3s后请重新登陆`)
+          if (errorData.error_code === 1005) {
+            // 没有权限
+            // console.log(errorData.msg)
+            this.vue.$message(`${errorData.msg},3s后请重新登陆`)
 
-          // token不合法的话，3s后跳到login页面
-          setTimeout(() => {
-            $cookie.remove('token')
-            this.vue.$router.push({name: 'login'})
-          }, 3000)
+            // token不合法的话，3s后跳到login页面
+            setTimeout(() => {
+              $cookie.remove('token')
+              this.vue.$router.push({ name: 'login' })
+            }, 3000)
+          }
         }
-        return error
+        return Promise.reject(error.response)
       })
   }
 }

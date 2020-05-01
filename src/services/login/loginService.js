@@ -15,11 +15,11 @@ class LoginService extends CommonService {
    * @param {params:{account:string;secret:string;type:number}}
    * @returns {*}
    */
-  login(params) {
+  login (params) {
     // 获取token
     return this.fetch.post('v1/token', {
-      account: 'zhouxy_123@126.com',
-      secret: 'asan1234',
+      account: params.username,
+      secret: params.password,
       type: 100
     })
   }
@@ -27,7 +27,7 @@ class LoginService extends CommonService {
   /**
    * @param params:{username:string;password1:string;password2:string}
    */
-  register(params) {
+  register (params) {
     return this.fetch.post('/v1/client/register', params)
   }
 }
